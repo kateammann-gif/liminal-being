@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Liminal Being</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Desktop Overlay -->
+    <div id="desktop-overlay">
+        <div class="content-wrapper" style="align-items: center; justify-content: center; text-align: center;">
+            <h1 class="title">Liminal<br>Being</h1>
+            <p>This experience is designed specifically for mobile devices with GPS capabilities.</p>
+            <p>Please open this website on your smartphone to participate.</p>
+        </div>
+    </div>
+
+    <!-- Landing Page View -->
+    <section id="view-start" class="view active">
+        <div class="content-wrapper">
+            <h1 class="title">Liminal<br>Being</h1>
+            <p>This project is an audio experience that came into being as result of my internal process of finding
+                identity between two very contrasting cultures.</p>
+            <p>It aims to convey the feeling of being in between two contradicting spaces, it is an invite to hold space
+                for tension and contradiction, comfort and discomfort. This work symbolizes the feeling of being born
+                into the liminal space between two very different cultures and growing up to learn what it means to
+                constantly balance the two and living with the tension of being in between. This app is an invite to
+                follow the process of deep listening, a practice that the artist applied while researching for the
+                sounds that were formative in the artist's upbringing. It weaves these sounds into the existing
+                soundscape of Zurich, where the artist currently resides.</p>
+
+            <div class="bottom-actions">
+                <button class="btn btn-secondary" onclick="app.navigateTo('view-about')">About</button>
+                <button class="btn btn-primary" onclick="app.navigateTo('view-instructions')">Start</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instructions View -->
+    <section id="view-instructions" class="view hidden">
+        <div class="content-wrapper">
+            <h2 class="title">How to Listen.</h2>
+            <p>This project guides you to 12 different locations in Zurich where I spent most of my time and are special
+                to me. Each location is linked to a different audio experience. This app requires access to your phone's
+                Geo Data.</p>
+            <p>You can then move into the vicinity of one of the locations (there is no particular order to access the
+                audio piece). During listening, you may move within a 200 meter parameter of the chosen location. Once
+                you leave the location, the linked audio piece will no longer be available.</p>
+            <p>For the full experience, it is recommended to put on a pair of headphones and settle down for the
+                duration of the audio piece.</p>
+
+            <!-- Graphic Element / Empty Box from Figma -->
+            <div class="instruction-graphic"></div>
+
+            <div class="bottom-actions">
+                <button class="btn btn-primary-full" onclick="app.navigateTo('view-permission')">OK :)</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Share Location Permission View -->
+    <section id="view-permission" class="view hidden">
+        <div class="content-wrapper">
+            <h2 class="title">Share your<br>Location.</h2>
+            <p>This tour only works with your GPS data. We are aware that this is very sensitive data but all the data
+                being used stays within the browser and is not shared with third parties.</p>
+            <p>If you really want to not share your location, <a href="#"
+                    onclick="app.navigateTo('view-no-permission')">go reject me.</a></p>
+
+            <div class="bottom-actions">
+                <button class="btn btn-primary-full" onclick="app.requestLocation()">Grant GPS Permission</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Not sharing location View -->
+    <section id="view-no-permission" class="view hidden">
+        <div class="content-wrapper">
+            <h2 class="title">Share your<br>Location.</h2>
+            <p>This tour only works with your GPS data. We are aware that this is very sensitive data but all the data
+                being used stays within the browser and is not shared with third parties.</p>
+            <p>If you really want to not share your location, contact me.</p>
+
+            <div class="bottom-actions">
+                <button class="btn btn-primary-full" onclick="app.navigateTo('view-start')">Back to Homepage</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Map View -->
+    <section id="view-map" class="view full-view hidden">
+        <div class="top-bar">
+            <div class="view-toggle">
+                <button class="toggle-btn active" onclick="app.switchTab('map')">Map</button>
+                <button class="toggle-btn" onclick="app.switchTab('list')">List</button>
+            </div>
+            <div class="small-logo">Liminal<br>Being</div>
+        </div>
+
+        <div id="map-container"></div>
+
+        <!-- Player Overlay -->
+        <div id="player-overlay" class="hidden">
+            <button id="close-player" onclick="app.closePlayer()"><i class="icon-back"></i></button>
+            <h2 id="player-title">Location Name</h2>
+            <div class="player-controls">
+                <button id="play-pause-btn" onclick="app.togglePlay()">
+                    <div class="play-icon"></div>
+                </button>
+            </div>
+            <p id="player-status">Stay within a 200m distance to listen to the full piece.</p>
+
+            <!-- Hidden Audio Element -->
+            <audio id="audio-player"></audio>
+        </div>
+
+        <!-- Navigation Bar -->
+        <nav class="bottom-nav">
+            <button onclick="app.navigateTo('view-start')">Start</button>
+            <button class="active" onclick="app.navigateTo('view-map')">Soundscapes</button>
+            <button onclick="app.navigateTo('view-about')">About</button>
+        </nav>
+    </section>
+
+    <!-- Main List View -->
+    <section id="view-list" class="view full-view hidden">
+        <div class="top-bar">
+            <div class="view-toggle">
+                <button class="toggle-btn" onclick="app.switchTab('map')">Map</button>
+                <button class="toggle-btn active" onclick="app.switchTab('list')">List</button>
+            </div>
+            <div class="small-logo">Liminal<br>Being</div>
+        </div>
+
+        <div id="list-container" class="scrollable">
+            <!-- Will be populated by JS -->
+        </div>
+
+        <!-- Navigation Bar -->
+        <nav class="bottom-nav">
+            <button onclick="app.navigateTo('view-start')">Start</button>
+            <button class="active" onclick="app.navigateTo('view-map')">Soundscapes</button>
+            <button onclick="app.navigateTo('view-about')">About</button>
+        </nav>
+    </section>
+
+    <!-- About View -->
+    <section id="view-about" class="view hidden">
+        <div class="content-wrapper scrollable pb-padding">
+            <h2 class="title">Get to know<br>the Project.</h2>
+            <div class="about-image">
+                <!-- Placeholder for the artist Image -->
+            </div>
+            <p>This project is a passion project on many layers.</p>
+            <p>I learned a couple of years ago that sound can be a medium of transportation to other places and other
+                times. I realized that I could bring people along with travels without them ever being in this place
+                with me. Other than pictures or film, it is much more subtle and leaves room for imagining worlds and
+                stories and I found that I could convey experiences that were impossible for me to put into words.</p>
+            <p>On my research trip to Thailand my aim was to look for the sounds that were most formative in my
+                childhood and youth. I wanted to collect these sounds and bring them back to Switzerland to finally show
+                the people in my hometown in Zurich a part of me that I had kept hidden for almost all of my life.</p>
+            <p>So in some sense, this art project is a return to my roots in Switzerland and in Thailand and my attempt
+                to take ownership of this liminal space that I am filling.</p>
+
+            <div class="contact-info mt-top">
+                <h3>Contact me</h3>
+                <p>thisiskatelim@gmail.com</p>
+
+                <h3>Follow me</h3>
+                <p>@thisiskatelim</p>
+
+                <h3>Supported by</h3>
+                <p>Stadt Zürich Kultur</p>
+            </div>
+        </div>
+        <!-- Navigation Bar -->
+        <nav class="bottom-nav">
+            <button onclick="app.navigateTo('view-start')">Start</button>
+            <button onclick="app.navigateTo('view-map')">Soundscapes</button>
+            <button class="active" onclick="app.navigateTo('view-about')">About</button>
+        </nav>
+    </section>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

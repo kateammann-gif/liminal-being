@@ -1,0 +1,429 @@
+:root {
+    --bg-color: #1a1b41;
+    --card-bg: #292b5e;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a3cc;
+    --accent-color: #4a4eb8;
+    --accent-hover: #5a5fcc;
+    --nav-bg: #0f1026;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    overflow: hidden;
+    /* Prevent scrolling on body, manage per view */
+    width: 100vw;
+    height: 100vh;
+}
+
+a {
+    color: var(--text-primary);
+    text-decoration: underline;
+}
+
+/* Typography */
+h1.title {
+    font-size: 4.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: var(--spacing-lg);
+}
+
+h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+}
+
+h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+p {
+    margin-bottom: var(--spacing-md);
+    font-weight: 300;
+}
+
+/* Views & Routing */
+.view {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    flex-direction: column;
+}
+
+.view.active {
+    display: flex;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.content-wrapper {
+    padding: var(--spacing-xl) var(--spacing-lg);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.scrollable {
+    overflow-y: auto;
+}
+
+.pb-padding {
+    padding-bottom: 80px;
+    /* Space for bottom nav */
+}
+
+/* Buttons */
+.btn {
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--text-secondary);
+}
+
+.btn-secondary {
+    background-color: var(--text-primary);
+    color: var(--bg-color);
+}
+
+.btn-primary-full {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+}
+
+.bottom-actions {
+    margin-top: auto;
+    display: flex;
+    gap: var(--spacing-md);
+    width: 100%;
+}
+
+.bottom-actions .btn {
+    flex: 1;
+}
+
+/* Top Bar */
+.top-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: var(--spacing-lg) var(--spacing-lg);
+    pointer-events: none; /* Map can be dragged where empty space is */
+}
+
+/* Toggle Tabs (Map / List) */
+.view-toggle {
+    display: flex;
+    background-color: #ffffff;
+    padding: 6px;
+    border-radius: 20px;
+    pointer-events: auto;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-btn {
+    background: transparent;
+    border: none;
+    color: #000000;
+    font-size: 1.1rem;
+    font-family: inherit;
+    font-weight: 500;
+    padding: 10px 24px;
+    cursor: pointer;
+    border-radius: 14px;
+    transition: all 0.2s ease;
+}
+
+.toggle-btn:not(.active) {
+    background-color: #f2f2f5; /* Light gray */
+    color: #000000;
+    margin-left: 6px;
+}
+.toggle-btn:first-child:not(.active) {
+    margin-left: 0;
+    margin-right: 6px;
+}
+.toggle-btn:last-child {
+    margin-left: 0;
+}
+
+.toggle-btn.active {
+    background-color: #0d0f1a; /* Almost black */
+    color: #ffffff;
+}
+
+/* Small Logo */
+.small-logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--text-primary);
+    text-align: right;
+    pointer-events: auto; /* Logo could be clickable, let's enable pointer events */
+}
+
+/* Map specific */
+#map-container {
+    flex: 1;
+    width: 100%;
+    z-index: 1;
+    /* Below overlay */
+}
+
+/* Dark theme for Leaflet tiles using CSS filters */
+.leaflet-layer,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
+    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+/* Player Overlay */
+#player-overlay {
+    position: absolute;
+    bottom: 80px;
+    /* Above nav */
+    left: 0;
+    width: 100%;
+    background: linear-gradient(180deg, rgba(26, 27, 65, 0) 0%, var(--card-bg) 40%, var(--bg-color) 100%);
+    padding: var(--spacing-xl) var(--spacing-lg);
+    padding-top: 60px;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#player-overlay.active {
+    transform: translateY(0);
+}
+
+.hidden {
+    display: none !important;
+}
+
+#close-player {
+    position: absolute;
+    top: var(--spacing-md);
+    left: var(--spacing-md);
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.player-controls {
+    margin: var(--spacing-lg) 0;
+}
+
+#play-pause-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.play-icon {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 15px 0 15px 25px;
+    border-color: transparent transparent transparent var(--text-primary);
+    margin-left: 8px;
+    /* Optical centering */
+}
+
+.pause-icon {
+    width: 20px;
+    height: 25px;
+    border-left: 6px solid var(--text-primary);
+    border-right: 6px solid var(--text-primary);
+}
+
+#player-status {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* Bottom Nav */
+.bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-color: var(--nav-bg);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1002;
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.bottom-nav button {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.bottom-nav button.active {
+    color: var(--text-primary);
+}
+
+/* List View */
+#list-container {
+    padding: 100px var(--spacing-lg) 100px var(--spacing-lg);
+    flex: 1;
+}
+
+.list-area {
+    margin-bottom: var(--spacing-lg);
+}
+
+.list-area h3 {
+    margin-bottom: var(--spacing-md);
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.location-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    background-color: var(--card-bg);
+    padding: 16px;
+    border-radius: 12px;
+}
+
+.location-info h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.status-badge {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.status-badge.listened {
+    background-color: var(--accent-color);
+}
+
+.navigate-btn {
+    background-color: transparent;
+    border: 1px solid var(--text-primary);
+    color: var(--text-primary);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+/* Utility */
+.mt-top {
+    margin-top: var(--spacing-xl);
+}
+
+.about-image {
+    width: 100%;
+    height: 200px;
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    margin-bottom: var(--spacing-lg);
+    background-image: url('placeholder.jpg');
+    /* We'll create a placeholder image */
+    background-size: cover;
+    background-position: center;
+}
+
+/* Desktop Overlay */
+#desktop-overlay {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    #desktop-overlay {
+        display: flex;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: var(--bg-color);
+        z-index: 10000;
+        flex-direction: column;
+    }
+    
+    .view, .bottom-nav {
+        display: none !important;
+    }
+}
